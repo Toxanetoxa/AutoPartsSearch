@@ -1,0 +1,9 @@
+node_modules
+dist
+coverage
+package-lock.json
+TASK.md
+wsprice.md
+.env
+.env.*
+!.env.example
