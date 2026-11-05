@@ -88,7 +88,7 @@ cp .env.example .env
 
 ```dotenv
 VITE_FAVORIT_API_KEY=ваш_ключ
-VITE_FAVORIT_API_URL=https://api.favorit.ru
+VITE_FAVORIT_API_URL=https://api.favorit-parts.ru
 ```
 
 Обе переменные обязательны. `VITE_FAVORIT_API_URL` задаёт абсолютный базовый HTTP(S)-адрес без query-параметров, hash, логина и пароля. Путь `/hs/hsprice/` клиент добавляет сам; при наличии префикса пути в базовом адресе он сохраняется. Не добавляйте `/hs/hsprice/` в значение повторно.
@@ -262,6 +262,8 @@ Fetch + проверка JSON (api/client.js)
 GET {VITE_FAVORIT_API_URL}/hs/hsprice/
 ```
 
+Для сервиса из [документации Favorit Parts](https://lk.favorit-parts.ru/static/wsprice.pdf?v=060223) используйте домен **`api.favorit-parts.ru`**. Для GitHub Pages задайте HTTPS-адрес `https://api.favorit-parts.ru`. Домен `api.favorit.ru` не соответствует адресу этого сервиса в документации.
+
 Оба этапа используют один endpoint с разными параметрами:
 
 | Параметр    | Производители                  | Предложения             |
@@ -377,11 +379,11 @@ https://toxanetoxa.github.io/AutoPartsSearch/
 
 1. Откройте **Settings → Pages → Build and deployment → Source** и выберите **GitHub Actions**.
 2. В **Settings → Secrets and variables → Actions → New repository secret** создайте секрет `VITE_FAVORIT_API_KEY` со значением ключа Favorit Parts.
-3. Там же создайте repository secret `VITE_FAVORIT_API_URL` со значением `https://api.favorit.ru` или другим совместимым базовым адресом API. Адрес также можно задать на вкладке **Variables → New repository variable**; если заданы оба варианта, используется secret.
+3. Там же создайте repository secret `VITE_FAVORIT_API_URL` со значением `https://api.favorit-parts.ru` или другим совместимым базовым адресом API. Адрес также можно задать на вкладке **Variables → New repository variable**; если заданы оба варианта, используется secret.
 4. Отправьте изменения workflow в основную ветку или запустите его вручную. Вкладка **Actions** покажет результат проверок, сборки и деплоя.
 5. Откройте адрес из шага деплоя или раздела **Settings → Pages**.
 
-В поле **Name** указывайте название настройки, а в поле **Secret** или **Value** — только её значение, без `VITE_FAVORIT_API_KEY=` или `VITE_FAVORIT_API_URL=`, кавычек и обратных слешей. Для URL значение выглядит как `https://api.favorit.ru`.
+В поле **Name** указывайте название настройки, а в поле **Secret** или **Value** — только её значение, без `VITE_FAVORIT_API_KEY=` или `VITE_FAVORIT_API_URL=`, кавычек и обратных слешей. Для URL значение выглядит как `https://api.favorit-parts.ru`.
 
 Локальный `.env` в GitHub не отправляется: при публикации ключ передаётся из repository secret, а базовый адрес — из repository secret или, при его отсутствии, repository variable в шаг сборки. После изменения любой настройки запустите полный workflow заново для пересборки. Повтор одного задания деплоя использует прежний артефакт и не добавляет новые настройки. При отсутствии настройки интерфейс опубликуется, но покажет сообщение об ошибке конфигурации и не будет отправлять запросы.
 
