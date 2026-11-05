@@ -1,0 +1,153 @@
+.table-responsive.offers-cards-scroll {
+  min-width: 0;
+  max-width: 100%;
+  padding: 12px 14px;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #b7c7ac transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.offers-cards-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.offers-cards-scroll::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: #b7c7ac;
+  background-clip: padding-box;
+}
+
+.offer-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.offer-card {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #e5e8e0;
+  border-radius: 9px;
+  background: #fff;
+  color: #29362f;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.offer-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.offer-card-brand {
+  min-width: 0;
+  color: #214b3d;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.offer-card-kind {
+  flex-shrink: 0;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: #f0f2ec;
+  color: #626d5b;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.offer-card-original {
+  background: #eaf1dd;
+  color: #58733d;
+}
+
+.offer-card-name {
+  margin: 5px 0 10px;
+  color: #626d5b;
+  line-height: 1.5;
+}
+
+.offer-card-meta {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  color: #626d5b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.offer-card-meta > div {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.offer-card-meta dt {
+  font-weight: 400;
+}
+
+.offer-card-meta dd {
+  min-width: 0;
+  margin: 0;
+  color: #495b49;
+}
+
+.offer-card-number {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.offer-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #edf0e7;
+}
+
+.offer-card-price {
+  color: #214b3d;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.offer-card-stock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #5f7c49;
+}
+
+.offer-card-stock > span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #87a365;
+}
+
+.offer-card-no-stock,
+.offer-card-unavailable .offer-card-brand,
+.offer-card-unavailable .offer-card-price {
+  color: #687360;
+}
+
+.offer-card-non-refundable {
+  margin-top: 8px;
+  color: #926d33;
+  font-size: 12px;
+  line-height: 1.5;
+}

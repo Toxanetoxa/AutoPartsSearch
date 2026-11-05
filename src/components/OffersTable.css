@@ -1,0 +1,252 @@
+.offers-table-scroll {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.offers-table-scroll:focus-visible {
+  outline: 2px solid #458268;
+  outline-offset: -2px;
+}
+
+.table.offers-table {
+  --bs-table-bg: #fff;
+  --bs-table-color: #29362f;
+  --bs-table-border-color: #edf0e7;
+  width: 100%;
+  min-width: 680px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  border-collapse: collapse;
+}
+
+.table.offers-table > :not(caption) > * > * {
+  padding: 16px;
+  border: 0;
+  border-bottom: 1px solid #edf0e7;
+  background: transparent;
+  box-shadow: none;
+  vertical-align: middle;
+}
+
+.table.offers-table > thead > tr > th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  background: #fafbf7;
+  color: #626d5b;
+  font-size: 13px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.table.offers-table > :not(caption) > * > :first-child {
+  padding-left: 24px;
+}
+
+.table.offers-table > :not(caption) > * > :last-child {
+  padding-right: 24px;
+}
+
+.table.offers-table > tbody > tr > td:first-child {
+  width: 38%;
+  min-width: 230px;
+}
+
+.table.offers-table > tbody > tr:hover > td {
+  background: #fcfdf9;
+}
+
+.offers-table .offers-part-brand {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: #214b3d;
+  font-size: 14px;
+}
+
+.offers-table .offers-part-brand strong {
+  font-weight: 600;
+}
+
+.offers-table .offers-kind {
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: #f0f2ec;
+  color: #626d5b;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.offers-table .offers-kind-original {
+  background: #eaf1dd;
+  color: #58733d;
+}
+
+.offers-table .offers-part-name {
+  max-width: 320px;
+  margin-top: 6px;
+  color: #626d5b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.offers-table .offers-non-refundable {
+  display: block;
+  margin-top: 7px;
+  color: #926d33;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.offers-table .offers-article {
+  color: #5f6b60;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.offers-table .offers-warehouse {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #626d5b;
+}
+
+.offers-table .offers-warehouse svg {
+  flex-shrink: 0;
+}
+
+.offers-table .offers-numeric {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.offers-table .offers-stock {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #5f7c49;
+}
+
+.offers-table .offers-stock > span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #87a365;
+}
+
+.offers-table .offers-no-stock {
+  color: #687360;
+}
+
+.offers-table .offers-price {
+  color: #214b3d;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.offers-table .offers-unavailable .offers-part-brand,
+.offers-table .offers-unavailable .offers-price {
+  color: #687360;
+}
+
+.offers-pagination {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 24px;
+  color: #626d5b;
+  font-size: 13px;
+}
+
+.offers-pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.offers-pagination .offers-page-button {
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid #dfe6d6;
+  border-radius: 5px;
+  background: #fafcf7;
+  color: #426344;
+  font-size: 13px;
+}
+
+.offers-pagination .offers-page-button:hover:not(:disabled) {
+  border-color: #b8c9a2;
+  background: #edf3e3;
+  color: #214b3d;
+}
+
+.offers-pagination .offers-page-button:focus-visible {
+  border-color: #458268;
+  box-shadow: 0 0 0 3px #214b3d20;
+}
+
+.offers-pagination .offers-page-button:disabled {
+  border-color: #edf0e7;
+  background: #fcfdfb;
+  color: #a2ac9c;
+  opacity: 1;
+  cursor: default;
+}
+
+.offers-pagination-page,
+.offers-pagination-range {
+  white-space: nowrap;
+}
+
+.offers-page-label-short {
+  display: none;
+}
+
+@media (max-width: 1080px) {
+  .table.offers-table > :not(caption) > * > :first-child {
+    padding-left: 16px;
+  }
+
+  .table.offers-table > :not(caption) > * > :last-child {
+    padding-right: 16px;
+  }
+
+  .offers-pagination {
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+  }
+
+  .offers-pagination-controls {
+    width: auto;
+    gap: 8px;
+    font-size: 12px;
+  }
+
+  .offers-pagination .offers-page-button {
+    min-height: 34px;
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .offers-page-label-full {
+    display: none;
+  }
+
+  .offers-page-label-short {
+    display: inline;
+  }
+}
