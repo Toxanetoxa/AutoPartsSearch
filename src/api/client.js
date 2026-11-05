@@ -1,12 +1,10 @@
 import { z } from 'zod';
 import { priceResponseSchema } from '../domain/parts';
-import { getApiKey } from './config';
+import { getApiKey, getApiUrl } from './config';
 import { ApiError, serviceError } from './errors';
 export { ApiError } from './errors';
 
 export const API_TIMEOUT_MS = 15_000;
-
-const API_URL = 'https://api.favorit-parts.ru/hs/hsprice/';
 
 const errorSchema = z.object({ error: z.string() });
 function isAbortError(error) {
@@ -79,7 +77,7 @@ export async function fetchParts(number, brand, signal) {
     params.set('analogues', 'on');
   }
   const response = priceResponseSchema.safeParse(
-    await requestJson(`${API_URL}?${params.toString()}`, signal),
+    await requestJson(`${getApiUrl()}?${params.toString()}`, signal),
   );
   if (!response.success) {
     throw new ApiError('Сервис вернул данные в неизвестном формате. Повторите поиск позже.');

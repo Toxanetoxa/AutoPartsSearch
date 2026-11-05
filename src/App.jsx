@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { isApiConfigured, MISSING_API_KEY_MESSAGE } from './api/config';
+import { getApiConfigurationError } from './api/config';
 import { useManufacturers, useOffers } from './api/queries';
 import { OffersTable } from './components/OffersTable';
 import { Manufacturers } from './components/Manufacturers';
@@ -99,7 +99,8 @@ export default function App() {
   const validationError =
     showValidation && !parsedNumber.success ? parsedNumber.error.issues[0].message : null;
   const debouncedNumber = useDebouncedValue(validNumber);
-  const apiConfigured = isApiConfigured();
+  const apiConfigurationError = getApiConfigurationError();
+  const apiConfigured = apiConfigurationError === null;
   const activeNumber =
     apiConfigured &&
     validNumber &&
@@ -135,7 +136,7 @@ export default function App() {
 
       {!apiConfigured && (
         <div className="alert alert-warning search-config-warning" role="alert">
-          <strong>Не настроен ключ Favorit Parts.</strong> {MISSING_API_KEY_MESSAGE}
+          <strong>Не настроен API Favorit Parts.</strong> {apiConfigurationError}
         </div>
       )}
 

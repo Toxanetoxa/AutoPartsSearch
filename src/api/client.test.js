@@ -6,6 +6,7 @@ function mockResponse(body, status = 200) {
 }
 beforeEach(() => {
   vi.stubEnv('VITE_FAVORIT_API_KEY', 'test-key');
+  vi.stubEnv('VITE_FAVORIT_API_URL', 'https://parts.example.test');
 });
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -17,14 +18,14 @@ describe('fetchParts', () => {
     mockResponse({ goods: sampleGoods });
     await expect(fetchParts('7160500039S', 'MEYLE')).resolves.toEqual(sampleGoods);
   });
-  it('calls the documented endpoint and encodes every parameter without rewriting punctuation', async () => {
+  it('calls the configured endpoint and encodes every parameter without rewriting punctuation', async () => {
     mockResponse({ goods: [] });
     const controller = new AbortController();
     await expect(fetchParts('01/#& 89', 'NGK/NTK & Co#', controller.signal)).resolves.toEqual([]);
     expect(fetch).toHaveBeenCalledOnce();
     const [path, options] = vi.mocked(fetch).mock.calls[0];
     const url = new URL(path);
-    expect(url.origin).toBe('https://api.favorit-parts.ru');
+    expect(url.origin).toBe('https://parts.example.test');
     expect(url.pathname).toBe('/hs/hsprice/');
     expect(Object.fromEntries(url.searchParams)).toEqual({
       key: 'test-key',
@@ -51,6 +52,28 @@ describe('fetchParts', () => {
     await expect(fetchParts('01089')).rejects.toThrow('Укажите VITE_FAVORIT_API_KEY в .env');
     expect(fetch).not.toHaveBeenCalled();
   });
+  it.each([
+    ['https://first.example.test', 'https://first.example.test/hs/hsprice/'],
+    [
+      'http://second.example.test:8080/catalog/',
+      'http://second.example.test:8080/catalog/hs/hsprice/',
+    ],
+  ])('uses the host and path prefix from %s', async (base, endpoint) => {
+    vi.stubEnv('VITE_FAVORIT_API_URL', base);
+    mockResponse({ goods: [] });
+    await fetchParts('01089');
+    const url = new URL(vi.mocked(fetch).mock.calls[0][0]);
+    expect(url.origin + url.pathname).toBe(endpoint);
+  });
+  it.each([undefined, '', '  ', 'not-a-url', 'https://parts.example.test?key=secret'])(
+    'does not fetch with a missing or invalid base URL: %j',
+    async (base) => {
+      vi.stubEnv('VITE_FAVORIT_API_URL', base);
+      vi.stubGlobal('fetch', vi.fn());
+      await expect(fetchParts('01089')).rejects.toThrow('VITE_FAVORIT_API_URL');
+      expect(fetch).not.toHaveBeenCalled();
+    },
+  );
   it.each([
     ['Empty key!', 'Ключ Favorit Parts не принят'],
     ['Invalid key client!', 'Ключ Favorit Parts не принят'],
@@ -84,7 +107,7 @@ describe('fetchParts', () => {
   it.each([200, 500])(
     'does not expose arbitrary upstream text or the key (HTTP %i)',
     async (status) => {
-      mockResponse({ error: 'Failure for https://api.favorit-parts.ru/?key=test-key' }, status);
+      mockResponse({ error: 'Failure for https://parts.example.test/?key=test-key' }, status);
       const error = await fetchParts('01089').catch((caught) => caught);
       expect(error).toBeInstanceOf(ApiError);
       expect(error.message).toContain('Favorit Parts не смог выполнить поиск');

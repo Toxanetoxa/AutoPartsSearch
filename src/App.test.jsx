@@ -17,6 +17,7 @@ const originalHistoryState = window.history.state;
 beforeEach(() => {
   window.history.replaceState(null, '', '/');
   vi.stubEnv('VITE_FAVORIT_API_KEY', 'test-key');
+  vi.stubEnv('VITE_FAVORIT_API_URL', 'https://parts.example.test');
   handleParts = (url) =>
     json(
       buildSampleResponse(
@@ -26,7 +27,7 @@ beforeEach(() => {
     );
   fetchMock.mockImplementation((path) => {
     const url = new URL(String(path));
-    expect(url.hostname).toBe('api.favorit-parts.ru');
+    expect(url.hostname).toBe('parts.example.test');
     expect(url.pathname).toBe('/hs/hsprice/');
     return Promise.resolve(handleParts(url));
   });
@@ -52,7 +53,7 @@ function setup() {
 }
 function partsCalls() {
   return fetchMock.mock.calls.filter(
-    ([url]) => new URL(String(url)).hostname === 'api.favorit-parts.ru',
+    ([url]) => new URL(String(url)).hostname === 'parts.example.test',
   );
 }
 async function search(user, number) {
@@ -396,22 +397,29 @@ describe('two-stage parts search', () => {
     expect(within(table).getByText(/100,00/)).toBeInTheDocument();
     expect(within(table).queryByText(/99\s?999/)).not.toBeInTheDocument();
   });
-  it('explains missing API configuration without making requests or substituting sample data', async () => {
-    vi.stubEnv('VITE_FAVORIT_API_KEY', '');
-    const user = setup();
-    expect(screen.getByRole('alert')).toHaveTextContent('Не настроен ключ Favorit Parts');
-    expect(screen.getByRole('alert')).toHaveTextContent('VITE_FAVORIT_API_KEY');
-    expect(screen.getByRole('alert')).toHaveTextContent('.env');
-    expect(screen.getByRole('button', { name: 'Найти' })).toBeDisabled();
-    await user.type(screen.getByLabelText('Артикул запчасти'), '01089');
-    await user.keyboard('{Enter}');
-    await act(async () => new Promise((resolve) => setTimeout(resolve, 500)));
-    expect(fetchMock).not.toHaveBeenCalled();
-    expect(screen.queryByRole('radio')).not.toBeInTheDocument();
-    expect(screen.queryByRole('table')).not.toBeInTheDocument();
-    expect(screen.queryByText('ДЕМО')).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: '01089' })).not.toBeInTheDocument();
-  });
+  it.each([
+    { key: '', url: 'https://parts.example.test', setting: 'VITE_FAVORIT_API_KEY' },
+    { key: 'test-key', url: '', setting: 'VITE_FAVORIT_API_URL' },
+    { key: 'test-key', url: 'not-a-url', setting: 'VITE_FAVORIT_API_URL' },
+  ])(
+    'explains invalid $setting configuration without making requests',
+    async ({ key, url, setting }) => {
+      vi.stubEnv('VITE_FAVORIT_API_KEY', key);
+      vi.stubEnv('VITE_FAVORIT_API_URL', url);
+      const user = setup();
+      expect(screen.getByRole('alert')).toHaveTextContent('Не настроен API Favorit Parts');
+      expect(screen.getByRole('alert')).toHaveTextContent(setting);
+      expect(screen.getByRole('button', { name: 'Найти' })).toBeDisabled();
+      await user.type(screen.getByLabelText('Артикул запчасти'), '01089');
+      await user.keyboard('{Enter}');
+      await act(async () => new Promise((resolve) => setTimeout(resolve, 500)));
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(screen.queryByRole('radio')).not.toBeInTheDocument();
+      expect(screen.queryByRole('table')).not.toBeInTheDocument();
+      expect(screen.queryByText('ДЕМО')).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: '01089' })).not.toBeInTheDocument();
+    },
+  );
   it('allows a repeated explicit search for the same article', async () => {
     const user = setup();
     await search(user, '01089');

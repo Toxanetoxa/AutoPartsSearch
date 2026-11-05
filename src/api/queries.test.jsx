@@ -17,6 +17,7 @@ function setup() {
 
 beforeEach(() => {
   vi.stubEnv('VITE_FAVORIT_API_KEY', 'test-key');
+  vi.stubEnv('VITE_FAVORIT_API_URL', 'https://parts.example.test');
 });
 
 afterEach(async () => {
@@ -31,8 +32,13 @@ afterEach(async () => {
 });
 
 describe('Redux parts queries', () => {
-  it('does not start either search without a configured API key', () => {
-    vi.stubEnv('VITE_FAVORIT_API_KEY', '');
+  it.each([
+    { key: '', url: 'https://parts.example.test' },
+    { key: 'test-key', url: '' },
+    { key: 'test-key', url: 'not-a-url' },
+  ])('does not start either search with invalid API configuration: %j', ({ key, url }) => {
+    vi.stubEnv('VITE_FAVORIT_API_KEY', key);
+    vi.stubEnv('VITE_FAVORIT_API_URL', url);
     vi.stubGlobal('fetch', vi.fn());
     const { wrapper } = setup();
     const manufacturers = renderHook(() => useManufacturers('01089'), { wrapper });
@@ -69,7 +75,7 @@ describe('Redux parts queries', () => {
     rerender({ brand: 'ZEN' });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     const url = new URL(vi.mocked(fetch).mock.calls[0][0]);
-    expect(url.origin).toBe('https://api.favorit-parts.ru');
+    expect(url.origin).toBe('https://parts.example.test');
     expect(url.searchParams.get('number')).toBe('01089');
     expect(url.searchParams.get('brand')).toBe('ZEN');
     expect(url.searchParams.get('analogues')).toBe('on');
