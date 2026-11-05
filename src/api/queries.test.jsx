@@ -69,7 +69,7 @@ describe('Redux parts queries', () => {
     rerender({ brand: 'ZEN' });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     const url = new URL(vi.mocked(fetch).mock.calls[0][0]);
-    expect(url.origin).toBe('http://api.favorit-parts.ru');
+    expect(url.origin).toBe('https://api.favorit-parts.ru');
     expect(url.searchParams.get('number')).toBe('01089');
     expect(url.searchParams.get('brand')).toBe('ZEN');
     expect(url.searchParams.get('analogues')).toBe('on');

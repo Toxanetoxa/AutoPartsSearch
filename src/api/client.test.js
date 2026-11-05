@@ -24,7 +24,7 @@ describe('fetchParts', () => {
     expect(fetch).toHaveBeenCalledOnce();
     const [path, options] = vi.mocked(fetch).mock.calls[0];
     const url = new URL(path);
-    expect(url.origin).toBe('http://api.favorit-parts.ru');
+    expect(url.origin).toBe('https://api.favorit-parts.ru');
     expect(url.pathname).toBe('/hs/hsprice/');
     expect(Object.fromEntries(url.searchParams)).toEqual({
       key: 'test-key',
@@ -84,12 +84,12 @@ describe('fetchParts', () => {
   it.each([200, 500])(
     'does not expose arbitrary upstream text or the key (HTTP %i)',
     async (status) => {
-      mockResponse({ error: 'Failure for http://api.favorit-parts.ru/?key=test-key' }, status);
+      mockResponse({ error: 'Failure for https://api.favorit-parts.ru/?key=test-key' }, status);
       const error = await fetchParts('01089').catch((caught) => caught);
       expect(error).toBeInstanceOf(ApiError);
       expect(error.message).toContain('Favorit Parts не смог выполнить поиск');
       expect(error.message).not.toContain('test-key');
-      expect(error.message).not.toContain('http://');
+      expect(error.message).not.toMatch(/https?:\/\//);
     },
   );
   it.each([{ goods: null }, { unexpected: [] }, { goods: [{ brand: 42 }] }])(

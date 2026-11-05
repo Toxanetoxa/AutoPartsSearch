@@ -6,7 +6,7 @@ export { ApiError } from './errors';
 
 export const API_TIMEOUT_MS = 15_000;
 
-const API_URL = 'http://api.favorit-parts.ru/hs/hsprice/';
+const API_URL = 'https://api.favorit-parts.ru/hs/hsprice/';
 
 const errorSchema = z.object({ error: z.string() });
 function isAbortError(error) {
